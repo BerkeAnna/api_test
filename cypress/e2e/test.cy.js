@@ -9,14 +9,17 @@ describe('/posts endpoint tests', () => {
             cy.request('/posts').its('body').should('be.a', 'array');
         });
 
-        it('GET /posts/{postId} - get one post by it is id', () => {
+        it('GET /posts/{postId} - get one post by it is id - response status', () => {
+            cy.request('/posts/1').its('status').should('eq', 200);
+        });
+
+        it('GET /posts/{postId} - get one post by it is id - response body', () => {
          
             cy.request({
                 method: 'GET',
                 url: '/posts/1',
                 failOnStatusCode: false,
             }).then((post) => {
-                cy.wrap(post.status).should('eq', 200);
                 cy.wrap(post.body).should('have.property', 'id').should('be.a', 'number');
                 cy.wrap(post.body).should('have.property', 'title').should('be.a', 'string');
                 cy.wrap(post.body).should('have.property', 'body').should('be.a', 'string');
@@ -24,18 +27,46 @@ describe('/posts endpoint tests', () => {
             });
         })
 
-        it('pet params types', () => {
-            cy.request('/users/1/posts').its('body').then((posts) => {
+        it('GET posts of 1 user - response status', () => {
+            cy.request('/users/1/posts').its('status').should('eq', 200);
+        });
+
+        //todo:
+        it('GET posts of 1 user - response body', () => {
+            cy.request({
+                method: 'GET',
+                url: '/users/1/posts',
+                failOnStatusCode: false,
+            }).its('body').then((posts) => {
                 for (const post of posts) {
-                    //cy.wrap(post.status).should('eq', 200);
                     cy.wrap(post).should('have.property', 'id').should('be.a', 'number');
                     cy.wrap(post).should('have.property', 'title').should('be.a', 'string');
                     cy.wrap(post).should('have.property', 'body').should('be.a', 'string');
                     cy.wrap(post).should('have.property', 'userId').should('be.a', 'number').should('eq', 1);
                 }
             });
-            cy.request('/users/1/posts').its('status').should('eq', 200);
         })
+
+        it('DELETE delete post - response status', () => {
+            cy.request({
+                method: 'DELETE',
+                url: '/posts/1',
+                failOnStatusCode: false,
+                
+            }).its('status').should('eq', 200)
+        });
+
+        it('CREATE create a new post - response status', () => {
+            cy.request({
+                method: 'POST',
+                url: '/create',
+                failOnStatusCode: false,
+                
+            }).its('status').should('eq', 200)
+            
+        });
+     
+
 
        
     /*
