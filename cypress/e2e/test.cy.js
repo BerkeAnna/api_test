@@ -1,21 +1,21 @@
 
 describe('/posts endpoint tests', () => {
     //státusz minden esetben ell
-        it.only('Get all posts', () => {
+        it('Get all posts', () => {
             cy.api('/posts').its('status').should('eq', 200);
         });
     
        it('Get all pets response is an array', () => {
-            cy.request('/posts').its('body').should('be.a', 'array');
+            cy.api('/posts').its('body').should('be.a', 'array');
         });
 
         it('GET /posts/{postId} - get one post by it is id - response status', () => {
-            cy.request('/posts/1').its('status').should('eq', 200);
+            cy.api('/posts/1').its('status').should('eq', 200);
         });
 
         it('GET /posts/{postId} - get one post by it is id - response body', () => {
          
-            cy.request({
+            cy.api({
                 method: 'GET',
                 url: '/posts/1',
                 failOnStatusCode: false,
@@ -28,12 +28,12 @@ describe('/posts endpoint tests', () => {
         })
 
         it('GET posts of 1 user - response status', () => {
-            cy.request('/users/1/posts').its('status').should('eq', 200);
+            cy.api('/users/1/posts').its('status').should('eq', 200);
         });
 
         //todo:
         it('GET posts of 1 user - response body', () => {
-            cy.request({
+            cy.api({
                 method: 'GET',
                 url: '/users/1/posts',
                 failOnStatusCode: false,
@@ -47,8 +47,36 @@ describe('/posts endpoint tests', () => {
             });
         })
 
+        it.only('CREATE: create a new post - response status 200', () => {
+            cy.api({
+                method: 'POST',
+                url: '/posts',
+                failOnStatusCode: false,
+                body: {
+                    title: 'as',
+                    body: 'dog',
+                    userId: 3
+                }
+            }).then((response) => {
+                cy.wrap(response.status).should('eq', 200);
+                cy.wrap(response.body).should('have.property', 'id').should('be.a', 'number');
+            });
+        });
+        it.only('CREATE: attempt to create a post with missing parameters - expecting status 400 (currently 200 due to bug)', () => {
+            cy.api({
+                method: 'POST',
+                url: '/posts',
+                failOnStatusCode: false,
+                body: {
+                    title: ' post'
+                }
+            }).then((response) => {
+                expect(response.status).to.eq(400); 
+            });
+        });
+
         it('DELETE delete post - response status', () => {
-            cy.request({
+            cy.api({
                 method: 'DELETE',
                 url: '/posts/1',
                 failOnStatusCode: false,
@@ -56,15 +84,7 @@ describe('/posts endpoint tests', () => {
             }).its('status').should('eq', 200)
         });
 
-        it('CREATE create a new post - response status', () => {
-            cy.request({
-                method: 'POST',
-                url: '/create',
-                failOnStatusCode: false,
-                
-            }).its('status').should('eq', 200)
-            
-        });
+       
      
 
 
