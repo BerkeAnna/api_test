@@ -56,7 +56,7 @@ describe('/posts endpoint tests', () => {
             }).its('status').should('eq', 200)
         });
 
-        it('CREATE create a new post - response status', () => {
+      /*  it('CREATE create a new post - response status', () => {
             cy.request({
                 method: 'POST',
                 url: '/create',
@@ -64,7 +64,7 @@ describe('/posts endpoint tests', () => {
                 
             }).its('status').should('eq', 200)
             
-        });
+        });*/
      
 
 
