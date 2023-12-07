@@ -59,6 +59,20 @@ describe('/posts endpoint tests', () => {
                 }
             }).then((response) => {
                 cy.wrap(response.status).should('eq', 200);
+            });
+        });
+
+        it.only('CREATE: create a new post - response body', () => {
+            cy.api({
+                method: 'POST',
+                url: '/posts',
+                failOnStatusCode: false,
+                body: {
+                    title: 'as',
+                    body: 'dog',
+                    userId: 3
+                }
+            }).then((response) => {
                 cy.wrap(response.body).should('have.property', 'id').should('be.a', 'number');
             });
         });
@@ -68,11 +82,29 @@ describe('/posts endpoint tests', () => {
                 url: '/posts',
                 failOnStatusCode: false,
                 body: {
-                    title: ' post'
+                    title: 'post'
                 }
             }).then((response) => {
-                expect(response.status).to.eq(400); 
+                expect(response.status).should('eq', 400); 
             });
+        });
+
+        it('PUT update an existing post - response status', () => {
+            cy.api({
+                method: 'PUT',
+                url: '/posts/1',
+                failOnStatusCode: false,
+                
+            }).its('status').should('eq', 200);
+        });
+
+        it('PUT update an existing post - response body', () => {
+            cy.api({
+                method: 'PUT',
+                url: '/posts/1',
+                failOnStatusCode: false,
+                //todooooo
+            }).its('status').should('eq', 200);
         });
 
         it('DELETE delete post - response status', () => {
