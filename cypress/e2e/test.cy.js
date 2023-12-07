@@ -1,8 +1,8 @@
 
 describe('/posts endpoint tests', () => {
     //státusz minden esetben ell
-        it('Get all posts', () => {
-            cy.request('/posts').its('status').should('eq', 200);
+        it.only('Get all posts', () => {
+            cy.api('/posts').its('status').should('eq', 200);
         });
     
        it('Get all pets response is an array', () => {
@@ -56,7 +56,7 @@ describe('/posts endpoint tests', () => {
             }).its('status').should('eq', 200)
         });
 
-      /*  it('CREATE create a new post - response status', () => {
+        it('CREATE create a new post - response status', () => {
             cy.request({
                 method: 'POST',
                 url: '/create',
@@ -64,7 +64,7 @@ describe('/posts endpoint tests', () => {
                 
             }).its('status').should('eq', 200)
             
-        });*/
+        });
      
 
 

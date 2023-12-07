@@ -1,12 +1,18 @@
 {
-  "name": "cypress-hw-base",
+  "name": "api-testing-cypress",
+  "version": "1.0.0",
   "scripts": {
-    "cypress": "node_modules\\.bin\\cypress open"
+    "cypress": "cypress open",
+    "cypress:headless": "./node_modules/.bin/cypress run"
   },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.cas.de:adam.gigacz/api-testing-cypress.git"
+  },
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "cypress": "^12.17.4"
-  },
-  "dependencies": {
-    "@bahmutov/cy-api": "^2.2.6"
+    "cypress": "^13.6.0",
+    "cypress-plugin-api": "^2.11.1"
   }
 }
