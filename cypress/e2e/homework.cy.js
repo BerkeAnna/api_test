@@ -65,7 +65,6 @@ describe("/posts endpoint tests", () => {
     cy.api("/users/1/posts").its("status").should("eq", 200);
   });
 
-  //todo:
   it("GET posts of 1 user - response body", () => {
     cy.api("/users/1/posts")
       .its("body")
