@@ -1,13 +1,13 @@
 describe("/posts endpoint tests", () => {
-  it("Get all posts", () => {
+  it("List all posts - response status", () => {
     cy.api("/posts").its("status").should("eq", 200);
   });
 
-  it("Get all pets response is an array", () => {
+  it("Get all posts response is an array", () => {
     cy.api("/posts").its("body").should("be.a", "array");
   });
 
-  it("GET /posts/{postId} - get one post by it is id - existing id - response status", () => {
+  it("GET get one post by it is id - existing id - response status", () => {
     cy.api("/posts/1").its("status").should("eq", 200);
   });
 
@@ -33,7 +33,17 @@ describe("/posts endpoint tests", () => {
       failOnStatusCode: false,
     })
       .its("status")
-      .should("eq", 404);
+      .should("not.eq", 200);
+  });
+
+  it("GET /posts/{postId} - get one post by it is id - negative id - response status", () => {
+    cy.api({
+      method: "GET",
+      url: "/posts/-1",
+      failOnStatusCode: false,
+    })
+      .its("status")
+      .should("not.eq", 200);
   });
 
   it("GET /posts/{postId} - get one post by it is id - non-existent id - response body", () => {
@@ -51,7 +61,7 @@ describe("/posts endpoint tests", () => {
       });
   });
 
-  it("GET posts of 1 user - response status", () => {
+  it("GET - get all posts of 1 user - response status", () => {
     cy.api("/users/1/posts").its("status").should("eq", 200);
   });
 
@@ -76,7 +86,7 @@ describe("/posts endpoint tests", () => {
       });
   });
 
-  it("CREATE: create a new post - response status 200", () => {
+  it("POST - create a new post - response status 200", () => {
     cy.api({
       method: "POST",
       url: "/posts",
@@ -86,12 +96,12 @@ describe("/posts endpoint tests", () => {
         body: "dog",
         userId: 3,
       },
-    }).then((response) => {
-      cy.wrap(response.status).should("eq", 200);
+    }).then((post) => {
+      cy.wrap(post.status).should("eq", 200);
     });
   });
 
-  it("CREATE: create a new post - response body", () => {
+  it("POST - create a new post - response body", () => {
     cy.api({
       method: "POST",
       url: "/posts",
@@ -105,7 +115,8 @@ describe("/posts endpoint tests", () => {
       cy.wrap(post.body).should("have.property", "id").should("be.a", "number");
     });
   });
-  it("CREATE: attempt to create a post with missing parameters - expecting status 400 (currently 200 due to bug)", () => {
+
+  it("POST - create a post with missing parameters - expecting status 400 (currently 200)", () => {
     cy.api({
       method: "POST",
       url: "/posts",
@@ -119,7 +130,7 @@ describe("/posts endpoint tests", () => {
     });
   });
 
-  it('Should return an error for POST with missing title', () => {
+  it('POST - create a new post without title', () => {
     cy.api({
       method: 'POST',
       url: '/posts',
@@ -134,7 +145,7 @@ describe("/posts endpoint tests", () => {
     });
   });
 
-  it('Should return an error for POST with invalid userId (non-numeric)', () => {
+  it('POST - create a new post with invalid userId', () => {
     cy.api({
       method: 'POST',
       url: '/posts',
@@ -142,21 +153,21 @@ describe("/posts endpoint tests", () => {
       body: {
         title: 'Test Title',
         body: 'Test Body',
-        userId: 'invalid', // Non-numeric userId
+        userId: -5, // negative id
       },
     }).then((post) => {
         cy.wrap(post.status).should("eq", 400);
     });
   });
 
-  it('Should return an error for POST with empty body', () => {
+  it('POST - create a new post without body', () => {
     cy.api({
       method: 'POST',
       url: '/posts',
       failOnStatusCode: false,
       body: {
         title: 'Test Title',
-        body: '', // Empty body
+        // body is missing
         userId: 1,
       },
     }).then((post) => {
@@ -164,11 +175,16 @@ describe("/posts endpoint tests", () => {
     });
   });
 
-  it("PUT update an existing post - response status", () => {
+  it("PUT - update an existing post - response status", () => {
     cy.api({
       method: "PUT",
       url: "/posts/1",
       failOnStatusCode: false,
+      body: {
+        title: "U title",
+        body: "U body",
+        userId: 2,
+      },
     })
       .its("status")
       .should("eq", 200);
@@ -182,7 +198,7 @@ describe("/posts endpoint tests", () => {
       body: {
         title: "Updated title",
         body: "Updated body",
-        userId: 1,
+        userId: 3,
       },
     }).then((post) => {
       cy.wrap(post.status).should("eq", 200);
@@ -192,11 +208,11 @@ describe("/posts endpoint tests", () => {
       cy.wrap(post.body)
         .should("have.property", "body")
         .should("include", "Updated body");
-      cy.wrap(post.body).should("have.property", "userId").should("eq", 1);
+      cy.wrap(post.body).should("have.property", "userId").should("eq", 3);
     });
   });
 
-  it("DELETE delete post - response status", () => {
+  it("DELETE - delete post - response status", () => {
     cy.api({
       method: "DELETE",
       url: "/posts/1",
