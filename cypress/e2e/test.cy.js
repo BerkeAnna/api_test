@@ -47,7 +47,7 @@ describe('/posts endpoint tests', () => {
             });
         })
 
-        it.only('CREATE: create a new post - response status 200', () => {
+        it('CREATE: create a new post - response status 200', () => {
             cy.api({
                 method: 'POST',
                 url: '/posts',
@@ -62,7 +62,7 @@ describe('/posts endpoint tests', () => {
             });
         });
 
-        it.only('CREATE: create a new post - response body', () => {
+        it('CREATE: create a new post - response body', () => {
             cy.api({
                 method: 'POST',
                 url: '/posts',
@@ -76,7 +76,7 @@ describe('/posts endpoint tests', () => {
                 cy.wrap(response.body).should('have.property', 'id').should('be.a', 'number');
             });
         });
-        it.only('CREATE: attempt to create a post with missing parameters - expecting status 400 (currently 200 due to bug)', () => {
+        it('CREATE: attempt to create a post with missing parameters - expecting status 400 (currently 200 due to bug)', () => {
             cy.api({
                 method: 'POST',
                 url: '/posts',
@@ -103,11 +103,20 @@ describe('/posts endpoint tests', () => {
                 method: 'PUT',
                 url: '/posts/1',
                 failOnStatusCode: false,
-                //todooooo
-            }).its('status').should('eq', 200);
+                body:{
+                    title: 'Updated title',
+                    body: 'Updated body',
+                    userId: 1
+                }
+            }).then(post => {
+                cy.wrap(post.status).should('eq', 200);
+                cy.wrap(post.body).should('have.property', 'title').should('include', 'Updated Title');
+                cy.wrap(post.body).should('have.property', 'body').should('include', 'Updated body');
+                cy.wrap(post.body).should('have.property', 'userId').should('include', '1');
+            });
         });
 
-        it('DELETE delete post - response status', () => {
+        it.only('DELETE delete post - response status', () => {
             cy.api({
                 method: 'DELETE',
                 url: '/posts/1',
@@ -115,6 +124,7 @@ describe('/posts endpoint tests', () => {
                 
             }).its('status').should('eq', 200)
         });
+   
 
        
      
