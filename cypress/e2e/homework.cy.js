@@ -31,7 +31,7 @@ describe("/posts endpoint tests", () => {
       });
     });
 
-    it("GET /posts/{postId} - get one post by it is id - non-existent id - response status", () => {
+    it(`GET /posts/{postId} - get one post by it's id - non-existent id - response status`, () => {
       cy.api({
         method: "GET",
         url: "/posts/9999999",
@@ -41,7 +41,7 @@ describe("/posts endpoint tests", () => {
         .should("not.eq", 200);
     });
 
-    it("GET /posts/{postId} - get one post by it is id - non-existent id - response body", () => {
+    it(`GET /posts/{postId} - get one post by it's id - non-existent id - response body`, () => {
       cy.api({
         method: "GET",
         url: "/posts/9999999",
@@ -56,7 +56,7 @@ describe("/posts endpoint tests", () => {
         });
     });
 
-    it("GET /posts/{postId} - get one post by it is id - negative id - response status", () => {
+    it(`GET /posts/{postId} - get one post by it's id - negative id - response status`, () => {
       cy.api({
         method: "GET",
         url: "/posts/-1",
@@ -66,7 +66,7 @@ describe("/posts endpoint tests", () => {
         .should("not.eq", 200);
     });
 
-    it("GET /posts/{postId} - get one post by it is id - negative id - response body", () => {
+    it(`GET /posts/{postId} - get one post by it's id - negative id - response body`, () => {
       cy.api({
         method: "GET",
         url: "/posts/-1",
