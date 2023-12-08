@@ -119,6 +119,51 @@ describe("/posts endpoint tests", () => {
     });
   });
 
+  it('Should return an error for POST with missing title', () => {
+    cy.api({
+      method: 'POST',
+      url: '/posts',
+      failOnStatusCode: false,
+      body: {
+        // title is missing
+        body: 'Test Body',
+        userId: 1,
+      },
+    }).then((post) => {
+        cy.wrap(post.status).should("eq", 400);
+    });
+  });
+
+  it('Should return an error for POST with invalid userId (non-numeric)', () => {
+    cy.api({
+      method: 'POST',
+      url: '/posts',
+      failOnStatusCode: false,
+      body: {
+        title: 'Test Title',
+        body: 'Test Body',
+        userId: 'invalid', // Non-numeric userId
+      },
+    }).then((post) => {
+        cy.wrap(post.status).should("eq", 400);
+    });
+  });
+
+  it('Should return an error for POST with empty body', () => {
+    cy.api({
+      method: 'POST',
+      url: '/posts',
+      failOnStatusCode: false,
+      body: {
+        title: 'Test Title',
+        body: '', // Empty body
+        userId: 1,
+      },
+    }).then((post) => {
+        cy.wrap(post.status).should("eq", 400);
+    });
+  });
+
   it("PUT update an existing post - response status", () => {
     cy.api({
       method: "PUT",
